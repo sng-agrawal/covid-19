@@ -1,0 +1,49 @@
+import pandas as pd
+import plotly.express as px
+import matplotlib.pyplot as plt
+covid_data= pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-17-2020.csv')
+print(covid_data)
+print("\nDataset information:")
+print(covid_data.info())
+print("\nMissing data information:")
+print(covid_data.isna().sum())
+
+covid_data['Active'] = covid_data['Confirmed'] - covid_data['Deaths'] - covid_data['Recovered']
+result = covid_data.groupby('Country/Region')['Confirmed', 'Deaths', 'Recovered', 'Active'].sum().reset_index()
+print(result) 
+
+data = covid_data.groupby(['Country/Region', 'Province/State'])['Confirmed', 'Deaths', 'Recovered'].max()
+pd.set_option('display.max_rows', None)
+print(data)
+
+c_data = covid_data[covid_data['Country/Region']=='China']
+c_data = c_data[['Province/State', 'Confirmed', 'Deaths', 'Recovered']]
+result = c_data.sort_values(by='Confirmed', ascending=False)
+result = result.reset_index(drop=True)
+print(result)
+
+data = covid_data.groupby('Country/Region')['Confirmed', 'Deaths', 'Recovered'].sum().reset_index()
+result = data[data['Deaths']>0][['Country/Region', 'Deaths']]
+print(result)
+
+covid_data['Active'] = covid_data['Confirmed'] - covid_data['Deaths'] - covid_data['Recovered']
+us_data = covid_data[covid_data['Country/Region']=='US'].drop(['Country/Region','Latitude', 'Longitude'], axis=1)
+us_data = us_data[us_data.sum(axis = 1) > 0]
+ 
+us_data = us_data.groupby(['Province/State'])['Active'].sum().reset_index()
+us_data_death = us_data[us_data['Active'] > 0]
+state_fig = px.bar(us_data_death, x='Province/State', y='Active', title='State wise recovery cases of COVID-19 in USA', text='Active')
+state_fig.show()
+
+covid_data['Active'] = covid_data['Confirmed'] - covid_data['Deaths'] - covid_data['Recovered']
+ r_data = covid_data.groupby(["Country/Region"])["Deaths", "Confirmed", "Recovered", "Active"].sum().reset_index()
+r_data = r_data.sort_values(by='Deaths', ascending=False)
+r_data = r_data[r_data['Deaths']>50]
+plt.figure(figsize=(15, 5))
+plt.plot(r_data['Country/Region'], r_data['Deaths'],color='red')
+plt.plot(r_data['Country/Region'], r_data['Confirmed'],color='green')
+plt.plot(r_data['Country/Region'], r_data['Recovered'], color='blue')
+plt.plot(r_data['Country/Region'], r_data['Active'], color='black')
+ 
+plt.title('Total Deaths(>150), Confirmed, Recovered and Active Cases by Country')
+plt.show()
