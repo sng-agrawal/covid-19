@@ -1,0 +1,78 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+df = pd.read_csv(‘covid_19_india.csv’,parse_dates=[0], dayfirst=True)
+
+dateData = df.groupby([‘Date’])[‘ConfirmedIndianNational’,’Deaths’].sum().reset_index()
+# Convert that column into a datetime datatype
+dateData[‘Date’] = pd.to_datetime(dateData[‘Date’], format=’%d/%m/%y’)
+#Sort by date
+df_sorted = dateData.sort_values(by=”Date”,ascending=True).set_index(“Date”)
+df_sorted = df_sorted.groupby([‘Date’])[‘ConfirmedIndianNational’,’Deaths’].sum().reset_index()
+
+plt.plot(df_sorted.Date,df_sorted.ConfirmedIndianNational)
+plt.title("COVID-19 INDIA")
+plt.xticks(rotation=60)
+plt.xlabel("Date",labelpad=10)
+plt.ylabel("Number of Cases",labelpad=10)
+plt.show()
+
+plt.plot(df_sorted.Date,df_sorted.Deaths,color=’red’)
+plt.title(“COVID-19 INDIA”)
+plt.xticks(rotation=60)
+plt.xlabel(“Date”,labelpad=10)
+plt.ylabel(“Number of Deaths”,labelpad=10)
+plt.show()
+
+plt.plot(stateData[‘State/UnionTerritory’],stateData[‘ConfirmedIndianNational’])
+plt.title(“COVID-19 INDIA”)
+plt.xticks(rotation=90)
+plt.xlabel(“State Name”)
+plt.ylabel(“Number of Cases”)
+plt.legend(“Cases”,loc=’center left’, bbox_to_anchor=(1, 0.5))
+plt.show()
+
+plt.plot(stateData[‘State/UnionTerritory’],stateData[‘Deaths’],color=”red”)
+plt.title(“COVID-19 INDIA”)
+plt.xticks(rotation=90)
+plt.xlabel(“State Name”)
+plt.ylabel(“Number of Deaths”)
+plt.legend(“Deaths”,loc=’center left’, bbox_to_anchor=(1, 0.5))
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.bar(stateData[‘State/UnionTerritory’],stateData[‘ConfirmedIndianNational’], color = list(‘rgbkymc’), width = 0.25)
+plt.title(“COVID-19 INDIA”)
+plt.xticks(rotation=90)
+plt.xlabel(“State Name”)
+plt.ylabel(“Number of Cases”)
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.bar(stateData[‘State/UnionTerritory’],stateData[‘Deaths’], color = list(‘rgbkymc’), width = 0.25)
+plt.title(“COVID-19 INDIA”)
+plt.xticks(rotation=90)
+plt.xlabel(“State Name”)
+plt.ylabel(“Number of Deaths”)
+plt.show()
+
+state = stateData[‘State/UnionTerritory’]
+cases = stateData[‘ConfirmedIndianNational’]
+explode = stateData.ConfirmedIndianNational.apply(lambda x:x > 100)
+explode = explode.apply(lambda x:0.2state = stateData[‘State/UnionTerritory’]
+cases = stateData[‘Deaths’]
+explode = stateData.ConfirmedIndianNational.apply(lambda x:x > 100)
+explode = explode.apply(lambda x:0 if x == True else 0)
+plt.title(“Covid 19”)
+plt.pie(cases, explode=explode,autopct=’%1.2f%%’,shadow=True, radius=2)
+plt.legend(state, loc=”center”,bbox_to_anchor=(2.5, 0.5))
+plt.title(“COVID-19 Deaths Vs States”, bbox={‘facecolor’:’0.8', ‘pad’:5}).set_position([.5,1.4])
+plt.show()
+
+if x == True else 0)
+plt.title(“COVID-19 Deaths Vs Cases”, bbox={‘facecolor’:’0.8', ‘pad’:5}).set_position([.5,1.8])
+plt.pie(cases, explode=explode,autopct=’%1.2f%%’,shadow=True, radius=3)
+plt.legend(state, loc=”center”,bbox_to_anchor=(2.5, 0.5))
+plt.show()
+
